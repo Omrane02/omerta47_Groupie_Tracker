@@ -170,7 +170,7 @@ func DetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Décoder l'URL correctement
+	
 	title, err := url.QueryUnescape(titleRaw)
 	if err != nil {
 		title = strings.TrimSpace(titleRaw)
@@ -184,16 +184,16 @@ func DetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Recherche avec comparaison flexible (insensible à la casse et aux espaces)
+	
 	var foundMatch *Match
 	for i := range matches {
 		m := &matches[i]
-		// Comparaison exacte d'abord
+		
 		if m.Title == title {
 			foundMatch = m
 			break
 		}
-		// Fallback: comparaison insensible à la casse et aux espaces multiples
+		
 		if strings.EqualFold(strings.Join(strings.Fields(m.Title), " "), strings.Join(strings.Fields(title), " ")) {
 			foundMatch = m
 			break
