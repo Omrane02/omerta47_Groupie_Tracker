@@ -1,36 +1,44 @@
-{{define "layout"}}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>ScoreBat Go</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <header>
-        <div class="container header-content">
-            <div class="logo"><a href="/">⚽ ScoreBat Go</a></div>
-            <nav>
-                <a href="/matches">Tous les Matchs</a>
-                <a href="/category?category=england">Angleterre</a>
-                <a href="/category?category=spain">Espagne</a>
-                <a href="/favorites">⭐ Mes Favoris</a>
-                <a href="/about">À propos</a>
-            </nav>
-            <form action="/search" method="GET" class="search-box">
-                <input type="text" name="q" placeholder="Équipe, Ligue...">
-                <button type="submit">OK</button>
-            </form>
+{{define "content"}}
+    <h2>{{.Title}}</h2>
+    {{if .CategoryName}}<p class="pill">Catégorie : {{.CategoryName}}</p>{{end}}
+ 
+    <div class="grid">
+        {{range .Matches}}
+        <div class="card">
+            <div class="thumbnail">
+                <img src="{{.Thumbnail}}" alt="{{.Title}}">
+                <div class="league-tag">{{.Competition}}</div>
+            </div>
+            <div class="card-body">
+                <h3>{{.Title}}</h3>
+                <p class="date">{{.PrettyDate}}</p>
+                <div class="actions">
+                    <a href="/match?title={{urlquery .Title}}" class="btn">Voir Détails</a>
+                   
+                    {{if .IsFavorite}}
+                        <a href="/fav-toggle?title={{urlquery .Title}}&redirect=/matches" class="btn btn-fav remove">💔 Retirer</a>
+                    {{else}}
+                        <a href="/fav-toggle?title={{urlquery .Title}}&redirect=/matches" class="btn btn-fav">❤️ Favoris</a>
+                    {{end}}
+                </div>
+            </div>
         </div>
-    </header>
+        {{else}}
+            <p>Aucun match trouvé.</p>
+        {{end}}
+    </div>
  
-    <main class="container">
-        {{template "content" .}}
-    </main>
+    {{if .TotalPages}}
+    <div class="pagination">
+        {{if gt .CurrentPage 1}}
+            <a href="/matches?page={{.PrevPage}}&q={{.Query}}&category={{.Category}}">&laquo; Précédent</a>
+        {{end}}
+       
+        <span>Page {{.CurrentPage}} sur {{.TotalPages}}</span>
  
-    <footer>
-        <p>&copy; 2026 ScoreBat Project </p>
-    </footer>
-</body>
-</html>
+        {{if lt .CurrentPage .TotalPages}}
+            <a href="/matches?page={{.NextPage}}&q={{.Query}}&category={{.Category}}">Suivant &raquo;</a>
+        {{end}}
+    </div>
+    {{end}}
 {{end}}
