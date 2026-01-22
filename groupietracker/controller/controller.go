@@ -13,8 +13,6 @@ import (
 	"time"
 )
 
-
-
 const (
 	scoreBatURL = "https://www.scorebat.com/video-api/v3/"
 	pageSize    = 9
@@ -37,7 +35,6 @@ type Match struct {
 		Embed string `json:"embed"`
 	} `json:"videos"`
 
-	
 	PrettyDate string        `json:"-"`
 	EmbedHTML  template.HTML `json:"-"`
 	IsFavorite bool          `json:"-"`
@@ -67,8 +64,6 @@ var (
 	httpClient  = &http.Client{Timeout: 10 * time.Second}
 )
 
-
-
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	matches, err := loadMatchesWithFavorites(r)
 	if err != nil {
@@ -76,7 +71,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	
 	if len(matches) > 6 {
 		matches = matches[:6]
 	}
@@ -170,10 +164,18 @@ func FavoritesPageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DetailHandler(w http.ResponseWriter, r *http.Request) {
-	title := strings.TrimSpace(r.URL.Query().Get("title"))
-	if title == "" {
+	titleRaw := r.URL.Query().Get("title")
+	if titleRaw == "" {
 		http.Error(w, "title manquant", http.StatusBadRequest)
 		return
+	}
+
+	// Décoder l'URL correctement
+	title, err := url.QueryUnescape(titleRaw)
+	if err != nil {
+		title = strings.TrimSpace(titleRaw)
+	} else {
+		title = strings.TrimSpace(title)
 	}
 
 	matches, err := loadMatchesWithFavorites(r)
@@ -182,17 +184,37 @@ func DetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, m := range matches {
+	// Recherche avec comparaison flexible (insensible à la casse et aux espaces)
+	var foundMatch *Match
+	for i := range matches {
+		m := &matches[i]
+		// Comparaison exacte d'abord
 		if m.Title == title {
-			if len(m.Videos) > 0 {
-				m.EmbedHTML = template.HTML(m.Videos[0].Embed)
-			}
-			render(w, "detail.html", detailPageData{Match: m})
-			return
+			foundMatch = m
+			break
+		}
+		// Fallback: comparaison insensible à la casse et aux espaces multiples
+		if strings.EqualFold(strings.Join(strings.Fields(m.Title), " "), strings.Join(strings.Fields(title), " ")) {
+			foundMatch = m
+			break
 		}
 	}
 
-	http.NotFound(w, r)
+	if foundMatch == nil {
+		log.Printf("Match non trouvé pour titre: %q (raw: %q)", title, titleRaw)
+		http.NotFound(w, r)
+		return
+	}
+
+	// Préparer l'embed HTML
+	if len(foundMatch.Videos) > 0 {
+		foundMatch.EmbedHTML = template.HTML(foundMatch.Videos[0].Embed)
+	} else {
+		log.Printf("Aucune vidéo trouvée pour: %q", foundMatch.Title)
+		foundMatch.EmbedHTML = template.HTML(`<p style="padding: 20px; text-align: center; color: #666;">Aucune vidéo disponible pour ce match.</p>`)
+	}
+
+	render(w, "detail.html", detailPageData{Match: *foundMatch})
 }
 
 func ToggleFavoriteHandler(w http.ResponseWriter, r *http.Request) {
@@ -221,8 +243,6 @@ func AboutHandler(w http.ResponseWriter, r *http.Request) {
 	data := struct{ Title string }{Title: "À propos"}
 	render(w, "about.html", data)
 }
-
-
 
 func loadMatchesWithFavorites(r *http.Request) ([]Match, error) {
 	matches, err := fetchMatches()
@@ -260,26 +280,32 @@ func fetchMatches() ([]Match, error) {
 	cachedMatch = apiResp.Response
 	cachedAt = time.Now()
 
+	if len(cachedMatch) > 0 {
+		log.Printf("Chargé %d matchs depuis l'API ScoreBat", len(cachedMatch))
+		if len(cachedMatch[0].Videos) > 0 {
+			log.Printf("Exemple de vidéo pour '%s': %d vidéo(s) disponible(s)", cachedMatch[0].Title, len(cachedMatch[0].Videos))
+		}
+	}
+
 	return cloneMatches(cachedMatch), nil
 }
 
 func normalizeMatches(matches []Match) {
 	for i := range matches {
 		m := &matches[i]
-		
+
 		if t, err := time.Parse(time.RFC3339, m.DateRaw); err == nil {
 			m.PrettyDate = t.Format("02 Jan 2006 15:04")
 		} else {
 			m.PrettyDate = m.DateRaw
 		}
-		
+
 		parts := strings.SplitN(m.Competition, ":", 2)
 		if len(parts) > 0 {
 			m.Category = strings.TrimSpace(strings.ToLower(parts[0]))
 		}
 	}
 
-	
 	sort.Slice(matches, func(i, j int) bool {
 		return matches[i].DateRaw > matches[j].DateRaw
 	})
@@ -357,8 +383,6 @@ func parsePage(raw string) int {
 	return p
 }
 
-
-
 func getFavorites(r *http.Request) map[string]bool {
 	favs := make(map[string]bool)
 	c, err := r.Cookie(cookieName)
@@ -388,8 +412,6 @@ func saveFavorites(w http.ResponseWriter, favs map[string]bool) {
 		HttpOnly: true,
 	})
 }
-
-
 
 func render(w http.ResponseWriter, contentTemplate string, data interface{}) {
 	tmpl, err := template.ParseFiles(

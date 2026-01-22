@@ -6,7 +6,14 @@
     <p class="meta">{{.Competition}} - {{.PrettyDate}}</p>
  
     <div class="video-container">
-        {{.EmbedHTML}}
+        {{if .EmbedHTML}}
+            {{.EmbedHTML}}
+        {{else}}
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center;">
+                <p>Aucune vidéo disponible pour ce match.</p>
+                <a href="{{.MatchviewURL}}" class="btn" target="_blank" rel="noreferrer" style="margin-top: 10px; display: inline-block;">Voir sur ScoreBat</a>
+            </div>
+        {{end}}
     </div>
  
     <div class="detail-actions">
