@@ -1,0 +1,173 @@
+body { 
+    font-family: sans-serif; 
+    background: #f4f4f4; 
+    margin: 0; 
+}
+.container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 20px; 
+}
+
+
+header { 
+    background: #1a202c; 
+    color: white; 
+    padding: 15px 0; 
+}
+.header-content { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.logo a { 
+    color: white; 
+    text-decoration: none; 
+    font-weight: bold; 
+    font-size: 1.5rem; 
+}
+nav a { 
+    color: #ccc; 
+    text-decoration: none; 
+    margin-left: 20px; 
+}
+
+nav a:hover { 
+    color: white; 
+}
+.search-box { 
+    display: flex; 
+    gap: 8px; 
+}
+.search-box input { 
+    padding: 8px; 
+    border-radius: 4px; 
+    border: 1px solid #ccc; 
+    min-width: 220px; 
+}
+.search-box button { 
+    padding: 8px 12px; 
+    border: none; 
+    background: #3182ce; 
+    color: white; 
+    border-radius: 4px; 
+    cursor: pointer; 
+}
+
+
+.grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 20px; 
+}
+.card { 
+    background: white; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+}
+.thumbnail { 
+    position: relative; 
+}
+.thumbnail img { 
+    width: 100%; 
+    height: auto; 
+    display: block; 
+}
+.league-tag { 
+    position: absolute; 
+    top: 10px; 
+    left: 10px; 
+    background: rgba(0,0,0,0.7); 
+    color: white; 
+    padding: 5px 10px; 
+    font-size: 0.8rem; 
+    border-radius: 4px; 
+}
+.card-body { 
+    padding: 15px;
+}
+.card-body h3 { 
+    font-size: 1.1rem; 
+    margin: 0 0 10px; 
+}
+.actions { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-top: 15px;
+}
+
+
+.btn { 
+    display: inline-block; 
+    padding: 8px 12px; 
+    background: #3182ce; 
+    color: white; 
+    text-decoration: none; 
+    border-radius: 4px; 
+    font-size: 0.9rem; 
+}
+.btn-fav { 
+    background: #e53e3e; 
+}
+.btn-fav.remove { 
+    background: #718096; 
+}
+
+
+.video-container { 
+    margin: 20px 0; 
+    position: relative; 
+    padding-bottom: 56.25%; 
+    height: 0; 
+    overflow: hidden; 
+}
+
+.video-container iframe {
+     position: absolute; 
+     top: 0; 
+     left: 0; 
+     width: 100%; 
+     height: 100%; 
+}
+
+
+.pagination { 
+    margin-top: 30px; 
+    text-align: center; 
+}
+.pagination a { 
+    display: inline-block; 
+    padding: 10px 15px; 
+    background: white; 
+    text-decoration: none; 
+    border: 1px solid #ddd; 
+    margin: 0 5px; 
+}
+
+
+.hero { 
+    background: white; 
+    padding: 20px; 
+    border-radius: 8px; 
+    margin-bottom: 20px; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+}
+
+.hero h1 { 
+    margin: 0 0 10px; }
+
+.hero p { 
+    margin: 0 0 15px; 
+    color: #4a5568; 
+}
+
+
+.pill { 
+    display: inline-block; 
+    background: #ebf8ff; 
+    color: #2b6cb0; 
+    padding: 6px 12px; 
+    border-radius: 999px; 
+    margin-bottom: 12px; 
+}
