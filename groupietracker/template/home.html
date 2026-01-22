@@ -1,0 +1,36 @@
+{{define "content"}}
+    <section class="hero">
+        <h1>ScoreBat Highlights</h1>
+        <p>Parcourez les derniers matchs vidéo, filtrez par ligue ou pays, et gardez vos favoris.</p>
+        <form action="/search" method="GET" class="search-box">
+            <input type="text" name="q" placeholder="Rechercher une équipe ou compétition">
+            <button type="submit">Rechercher</button>
+        </form>
+    </section>
+ 
+    <h2>Dernières vidéos</h2>
+    <div class="grid">
+        {{range .Matches}}
+        <div class="card">
+            <div class="thumbnail">
+                <img src="{{.Thumbnail}}" alt="{{.Title}}">
+                <div class="league-tag">{{.Competition}}</div>
+            </div>
+            <div class="card-body">
+                <h3>{{.Title}}</h3>
+                <p class="date">{{.PrettyDate}}</p>
+                <div class="actions">
+                    <a href="/match?title={{urlquery .Title}}" class="btn">Voir Détails</a>
+                    {{if .IsFavorite}}
+                        <a href="/fav-toggle?title={{urlquery .Title}}&redirect=/" class="btn btn-fav remove">💔 Retirer</a>
+                    {{else}}
+                        <a href="/fav-toggle?title={{urlquery .Title}}&redirect=/" class="btn btn-fav">❤️ Favoris</a>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        {{else}}
+            <p>Aucun match trouvé.</p>
+        {{end}}
+    </div>
+{{end}}

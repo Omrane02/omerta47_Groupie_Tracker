@@ -1,0 +1,21 @@
+{{define "content"}}
+<div class="detail-view">
+    <a href="/matches" class="back-link">← Retour aux matchs</a>
+   
+    <h1>{{.Title}}</h1>
+    <p class="meta">{{.Competition}} - {{.PrettyDate}}</p>
+ 
+    <div class="video-container">
+        {{.EmbedHTML}}
+    </div>
+ 
+    <div class="detail-actions">
+        {{if .IsFavorite}}
+            <a href="/fav-toggle?title={{urlquery .Title}}&redirect=/match?title={{urlquery .Title}}" class="btn btn-fav remove">Retirer des Favoris</a>
+        {{else}}
+            <a href="/fav-toggle?title={{urlquery .Title}}&redirect=/match?title={{urlquery .Title}}" class="btn btn-fav">Ajouter aux Favoris</a>
+        {{end}}
+        <a href="{{.MatchviewURL}}" class="btn" target="_blank" rel="noreferrer">Voir sur ScoreBat</a>
+    </div>
+</div>
+{{end}}

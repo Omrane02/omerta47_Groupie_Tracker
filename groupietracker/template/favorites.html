@@ -1,0 +1,25 @@
+{{define "content"}}
+    <h2>{{.Title}}</h2>
+    <div class="grid">
+        {{range .Matches}}
+        <div class="card">
+            <div class="thumbnail">
+                <img src="{{.Thumbnail}}" alt="{{.Title}}">
+                <div class="league-tag">{{.Competition}}</div>
+            </div>
+            <div class="card-body">
+                <h3>{{.Title}}</h3>
+                <p class="date">{{.PrettyDate}}</p>
+                <div class="actions">
+                    <a href="/match?title={{urlquery .Title}}" class="btn">Voir Détails</a>
+                    <a href="/fav-toggle?title={{urlquery .Title}}&redirect=/favorites" class="btn btn-fav remove">💔 Retirer</a>
+                </div>
+            </div>
+        </div>
+        {{else}}
+            <p>Vous n'avez pas encore de favoris. Parcourez les matchs et ajoutez-en !</p>
+        {{end}}
+    </div>
+{{end}}
+ 
+ 

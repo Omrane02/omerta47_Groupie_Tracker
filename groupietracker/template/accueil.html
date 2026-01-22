@@ -1,0 +1,36 @@
+{{define "layout"}}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>ScoreBat Go</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo"><a href="/">⚽ ScoreBat Go</a></div>
+            <nav>
+                <a href="/matches">Tous les Matchs</a>
+                <a href="/category?category=england">Angleterre</a>
+                <a href="/category?category=spain">Espagne</a>
+                <a href="/favorites">⭐ Mes Favoris</a>
+                <a href="/about">À propos</a>
+            </nav>
+            <form action="/search" method="GET" class="search-box">
+                <input type="text" name="q" placeholder="Équipe, Ligue...">
+                <button type="submit">OK</button>
+            </form>
+        </div>
+    </header>
+ 
+    <main class="container">
+        {{template "content" .}}
+    </main>
+ 
+    <footer>
+        <p>&copy; 2026 ScoreBat Project </p>
+    </footer>
+</body>
+</html>
+{{end}}
